@@ -1,0 +1,103 @@
+﻿<Window x:Class="GetWMIBasic.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GetWMIBasic"
+        mc:Ignorable="d"
+        Title="Get WMI Basic"
+        Height="192"
+        Width="800"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="130"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu IsMainMenu="True" >
+                <MenuItem Header="_File">
+                    <MenuItem Header="Connect to _Another Computer" Click="ConnectToAnotherComputer_Button"></MenuItem>
+                    <MenuItem Header="Exit" Click="Exit_Button"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Actions">
+                    <MenuItem Header="Restart Machine" Click="Restart_Button"></MenuItem>
+                    <MenuItem Header="Shutdown Machine" Click="Shutdown_Button"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="View">
+                    <MenuItem Header="Refresh" Click="Refresh_Button"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.Margin>
+                <Thickness Left="10" Right="10"></Thickness>
+            </Grid.Margin>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="390" />
+                <ColumnDefinition Width="390" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <GroupBox Header="Hardware Information">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="110"/>
+                            <ColumnDefinition Width="270"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0">BIOS Manufacturer</Label>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Manufacturer" Grid.Row="0" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0">BIOS Name</Label>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Name" Grid.Row="1" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">BIOS S/N</Label>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_SN" Grid.Row="2" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">BIOS Version</Label>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Version" Grid.Row="3" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <GroupBox Header="Operating System Information">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="250"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Row="0" Grid.Column="0">Computer Name</Label>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Name" Grid.Row="0" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="1" Grid.Column="0">Domain/Workgroup</Label>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Domain" Grid.Row="1" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="2" Grid.Column="0">Physical Memory</Label>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Memory" Grid.Row="2" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <Label Grid.Row="3" Grid.Column="0">System Type</Label>
+                        <TextBox IsReadOnly="True" x:Name="Computer_SysType" Grid.Row="3" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.Margin>
+                <Thickness Left="10" Right="10"></Thickness>
+            </Grid.Margin>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90"/>
+                <ColumnDefinition Width="690"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="Bottom_Label" Grid.Column="0" VerticalAlignment="Center">Welcome</TextBlock>
+            <ProgressBar Name="Bottom_ProgressBar" Grid.Column="1" Height="20" VerticalAlignment="Center"></ProgressBar>
+        </Grid>
+    </Grid>
+</Window>
