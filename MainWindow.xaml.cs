@@ -70,9 +70,30 @@ namespace GetWMIBasic
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 6 });
                 }
+                catch (UnauthorizedAccessException ex)
+                {
+#if DEBUG
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+                }
+                catch (COMException ex)
+                {
+#if DEBUG
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+                }
+
                 catch (ManagementException ex)
                 {
+#if DEBUG
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
                 }
                 finally
                 {
@@ -92,9 +113,30 @@ namespace GetWMIBasic
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 5 });
                 }
+                catch (UnauthorizedAccessException ex)
+                {
+#if DEBUG
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+                }
+                catch (COMException ex)
+                {
+#if DEBUG
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+                }
+
                 catch (ManagementException ex)
                 {
+#if DEBUG
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                    MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
                 }
                 finally
                 {

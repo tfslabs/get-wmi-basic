@@ -31,8 +31,6 @@ namespace GetWMIBasic.WMIMethods
             isLocal = true;
             credential = new ConnectionOptions
             {
-                Username = userCredential.username,
-                SecurePassword = userCredential.password,
                 Impersonation = ImpersonationLevel.Impersonate,
                 Authentication = AuthenticationLevel.PacketPrivacy,
                 EnablePrivileges = true
