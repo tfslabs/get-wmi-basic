@@ -1,8 +1,12 @@
-﻿using GetWMIBasic.WMIMethods;
+﻿using System;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
+
+using GetWMIBasic.WMIMethods;
 
 namespace GetWMIBasic
 {
@@ -22,19 +26,32 @@ namespace GetWMIBasic
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Bottom_Label.Text = "Loading";
             await Refresh();
         }
 
         /* 
          * Button-based methods
          */
-        private async void ConnectToAnotherComputer_ButtonAsync(object sender, RoutedEventArgs e)
+        private async void ConnectToAnotherComputer_Button(object sender, RoutedEventArgs e)
         {
             ConnectForm connectForm = new ConnectForm();
-            machine = new MachineMethods(connectForm.ReturnValue());
 
-            await Refresh();
+            (string computerName, string username, SecureString password) userCredential = connectForm.ReturnValue();
+
+            if (userCredential.computerName != "")
+            {
+                machine = null;
+                if (!userCredential.computerName.Equals("localhost"))
+                {
+                    machine = new MachineMethods(userCredential);
+                }
+                else
+                {
+                    machine = new MachineMethods();
+                }
+
+                await Refresh();
+            }
         }
 
         private void Exit_Button(object sender, RoutedEventArgs e)
@@ -42,18 +59,24 @@ namespace GetWMIBasic
             Application.Current.Shutdown();
         }
 
-        private async void Restart_ButtonAsync(object sender, RoutedEventArgs e)
+        private async void Restart_Button(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show($"Do you want to restart the computer {machine.GetComputerName()}?", "Proceed?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
+                StatusBarChange("Loading", true);
+
                 try
                 {
-                    await machine.Connect("root\\cimv2");
+                    machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 6 });
                 }
                 catch (ManagementException ex)
                 {
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    StatusBarChange("Done", false);
                 }
             }
         }
@@ -62,19 +85,25 @@ namespace GetWMIBasic
         {
             if (MessageBox.Show($"Do you want to shutdown the computer {machine.GetComputerName()}?", "Proceed?", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
+                StatusBarChange("Loading", true);
+
                 try
                 {
-                    await machine.Connect("root\\cimv2");
+                    machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 5 });
                 }
                 catch (ManagementException ex)
                 {
                     MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                finally
+                {
+                    StatusBarChange("Done", false);
+                }
             }
         }
 
-        private async void Refresh_ButtonAsync(object sender, RoutedEventArgs e)
+        private async void Refresh_Button(object sender, RoutedEventArgs e)
         {
             await Refresh();
         }
@@ -84,9 +113,11 @@ namespace GetWMIBasic
          */
         private async Task Refresh()
         {
+            StatusBarChange("Loading", true);
+
             try
             {
-                await machine.Connect("root\\cimv2");
+                machine.Connect("root\\cimv2");
 
                 var biosProperties = machine.GetObjects("Win32_BIOS", "*");
                 foreach (ManagementObject biosProperty in (await biosProperties).Cast<ManagementObject>())
@@ -106,10 +137,41 @@ namespace GetWMIBasic
                     Computer_SysType.Text = osProperty["SystemType"]?.ToString() ?? string.Empty;
                 }
             }
+            catch (UnauthorizedAccessException ex)
+            {
+#if DEBUG
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+            }
+            catch (COMException ex)
+            {
+#if DEBUG
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
+            }
+            
             catch (ManagementException ex)
             {
+#if DEBUG
                 MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#else
+                MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+#endif
             }
+            finally
+            {
+                StatusBarChange("Done", false);
+            }
+        }
+
+        protected void StatusBarChange(string label, bool progressbarLoading)
+        {
+            Bottom_Label.Text = label;
+            Bottom_ProgressBar.IsIndeterminate = progressbarLoading;
         }
     }
 }

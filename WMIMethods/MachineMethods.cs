@@ -41,34 +41,18 @@ namespace GetWMIBasic.WMIMethods
 
         public MachineMethods((string computerName, string username, SecureString password) userCredential)
         {
-            if (userCredential.computerName == "localhost")
+            this.userCredential.computerName = userCredential.computerName;
+            this.userCredential.username = userCredential.username;
+            this.userCredential.password = userCredential.password;
+            isLocal = false;
+            credential = new ConnectionOptions
             {
-                userCredential.computerName = "localhost";
-                isLocal = true;
-                credential = new ConnectionOptions
-                {
-                    Username = userCredential.username,
-                    SecurePassword = userCredential.password,
-                    Impersonation = ImpersonationLevel.Impersonate,
-                    Authentication = AuthenticationLevel.PacketPrivacy,
-                    EnablePrivileges = true
-                };
-            }
-            else
-            {
-                this.userCredential.computerName = userCredential.computerName;
-                this.userCredential.username = userCredential.username;
-                this.userCredential.password = userCredential.password;
-                isLocal = false;
-                credential = new ConnectionOptions
-                {
-                    Username = userCredential.username,
-                    SecurePassword = userCredential.password,
-                    Impersonation = ImpersonationLevel.Impersonate,
-                    Authentication = AuthenticationLevel.PacketPrivacy,
-                    EnablePrivileges = true
-                };
-            }
+                Username = userCredential.username,
+                SecurePassword = userCredential.password,
+                Impersonation = ImpersonationLevel.Impersonate,
+                Authentication = AuthenticationLevel.PacketPrivacy,
+                EnablePrivileges = true
+            };
         }
 
         /*
@@ -83,14 +67,16 @@ namespace GetWMIBasic.WMIMethods
          * Connection method
          */
 
-        public async Task Connect(string nameSpace)
+        public void Connect(string nameSpace)
         {
             scopePath = $"\\\\{userCredential.computerName}\\{nameSpace}";
             scope = (isLocal) ? new ManagementScope(scopePath) : new ManagementScope(scopePath, credential);
-            await Task.Run(() => scope.Connect());
+            scope.Connect();
         }
 
-        // Fix for CS1983 and CS1998: Change return type to Task<ManagementObjectCollection> and use await Task.Run(...) to make the method truly asynchronous.
+        /*
+         * Get WMI objects
+         */
         public async Task<ManagementObjectCollection> GetObjects(string className, string fields)
         {
             ObjectQuery query = new ObjectQuery($"SELECT {fields} FROM {className}");
