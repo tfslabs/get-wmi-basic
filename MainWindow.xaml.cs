@@ -67,6 +67,11 @@ namespace GetWMIBasic
 
                 try
                 {
+                    if (machine.GetComputerName() == "localhost")
+                    {
+                        throw new ManagementException("Local Host cannot be restarted");
+                    }
+
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 6 });
                 }
@@ -110,6 +115,11 @@ namespace GetWMIBasic
 
                 try
                 {
+                    if (machine.GetComputerName() == "localhost")
+                    {
+                        throw new ManagementException("Local Host cannot be shut down");
+                    }
+
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 5 });
                 }
