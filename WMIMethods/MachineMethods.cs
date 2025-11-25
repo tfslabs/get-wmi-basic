@@ -3,8 +3,18 @@ using System.Management;
 using System.Security;
 using System.Threading.Tasks;
 
+/*
+ * The default WMI method class includes:
+ *  1. CriticalException.cs - A custom exception class for critical WMI errors
+ *  2. CommonException.cs - A custom exception class for common WMI errors
+ *  3. MachineMethods.cs - A base class for WMI operations on local and remote machines
+ */
 namespace GetWMIBasic.WMIMethods
 {
+    /*
+     * Machine Method class
+     * It is used to connect and perform WMI tasks to local and remote machines through WMI
+     */
     public class MachineMethods
     {
         /*
@@ -90,11 +100,11 @@ namespace GetWMIBasic.WMIMethods
             ObjectQuery query = new ObjectQuery($"SELECT {fields} FROM {className}");
             await Task.Run(() =>
             {
-                using (var searcher = new ManagementObjectSearcher(scope, query))
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
                 {
                     foreach (ManagementObject manageObject in searcher.Get().Cast<ManagementObject>())
                     {
-                        manageObject.InvokeMethod(methodName, args);
+                        _ = manageObject.InvokeMethod(methodName, args);
                     }
                 }
             });

@@ -29,6 +29,10 @@
                 <MenuItem Header="View">
                     <MenuItem Header="Refresh" Click="Refresh_Button"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="Try throw exception">
+                    <MenuItem Header="Regular Exception" Click="RegularException_Click"></MenuItem>
+                    <MenuItem Header="Critical Exception" Click="CriticalException_Click" ></MenuItem>
+                </MenuItem>
             </Menu>
         </Grid>
         <Grid Grid.Row="1">

@@ -1,12 +1,11 @@
-﻿using System;
+﻿using GetWMIBasic.DefaultUI;
+using GetWMIBasic.WMIMethods;
+using System;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading.Tasks;
 using System.Windows;
-
-using GetWMIBasic.WMIMethods;
 
 namespace GetWMIBasic
 {
@@ -41,14 +40,7 @@ namespace GetWMIBasic
             if (userCredential.computerName != "")
             {
                 machine = null;
-                if (!userCredential.computerName.Equals("localhost"))
-                {
-                    machine = new MachineMethods(userCredential);
-                }
-                else
-                {
-                    machine = new MachineMethods();
-                }
+                machine = !userCredential.computerName.Equals("localhost") ? new MachineMethods(userCredential) : new MachineMethods();
 
                 await Refresh();
             }
@@ -75,30 +67,9 @@ namespace GetWMIBasic
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 6 });
                 }
-                catch (UnauthorizedAccessException ex)
+                catch (Exception ex)
                 {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-                }
-                catch (COMException ex)
-                {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-                }
-
-                catch (ManagementException ex)
-                {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
+                    exView.HandleException(ex);
                 }
                 finally
                 {
@@ -123,30 +94,9 @@ namespace GetWMIBasic
                     machine.Connect("root\\cimv2");
                     await machine.CallMethod("Win32_OperatingSystem", "*", "Win32Shutdown", new object[] { 5 });
                 }
-                catch (UnauthorizedAccessException ex)
+                catch (Exception ex)
                 {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-                }
-                catch (COMException ex)
-                {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-                }
-
-                catch (ManagementException ex)
-                {
-#if DEBUG
-                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                    MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
+                    (new ExceptionView()).HandleException(ex);
                 }
                 finally
                 {
@@ -160,6 +110,30 @@ namespace GetWMIBasic
             await Refresh();
         }
 
+        private void RegularException_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                throw new CommonException("This is a common exception example.");
+            }
+            catch (Exception ex)
+            {
+                exView.HandleException(ex);
+            }
+        }
+
+        private void CriticalException_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                throw new CriticalException("This is a critical exception example.");
+            }
+            catch (Exception ex)
+            {
+                exView.HandleException(ex);
+            }
+        }
+
         /*
          * Non-button methods
          */
@@ -171,7 +145,7 @@ namespace GetWMIBasic
             {
                 machine.Connect("root\\cimv2");
 
-                var biosProperties = machine.GetObjects("Win32_BIOS", "*");
+                Task<ManagementObjectCollection> biosProperties = machine.GetObjects("Win32_BIOS", "Manufacturer, Name, SerialNumber, Version");
                 foreach (ManagementObject biosProperty in (await biosProperties).Cast<ManagementObject>())
                 {
                     BIOS_Manufacturer.Text = biosProperty["Manufacturer"]?.ToString() ?? string.Empty;
@@ -180,7 +154,7 @@ namespace GetWMIBasic
                     BIOS_Version.Text = biosProperty["Version"]?.ToString() ?? string.Empty;
                 }
 
-                var osProperties = machine.GetObjects("Win32_ComputerSystem", "*");
+                Task<ManagementObjectCollection> osProperties = machine.GetObjects("Win32_ComputerSystem", "Name, Domain, TotalPhysicalMemory, SystemType");
                 foreach (ManagementObject osProperty in (await osProperties).Cast<ManagementObject>())
                 {
                     Computer_Name.Text = osProperty["Name"]?.ToString() ?? string.Empty;
@@ -189,30 +163,9 @@ namespace GetWMIBasic
                     Computer_SysType.Text = osProperty["SystemType"]?.ToString() ?? string.Empty;
                 }
             }
-            catch (UnauthorizedAccessException ex)
+            catch (Exception ex)
             {
-#if DEBUG
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                MessageBox.Show($"Failed to catch the Authenticate with {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-            }
-            catch (COMException ex)
-            {
-#if DEBUG
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                MessageBox.Show($"Failed to reach {machine.GetComputerName()}: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
-            }
-            
-            catch (ManagementException ex)
-            {
-#if DEBUG
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#else
-                MessageBox.Show($"Failed to catch the Management Method: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-#endif
+                exView.HandleException(ex);
             }
             finally
             {
