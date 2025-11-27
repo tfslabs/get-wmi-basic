@@ -6,15 +6,17 @@
         xmlns:local="clr-namespace:GetWMIBasic"
         mc:Ignorable="d"
         Title="Get WMI Basic"
-        Height="192"
+        Height="200"
         Width="800"
+        MinWidth="600"
+        MaxWidth="1000"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
-            <RowDefinition Height="130"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu IsMainMenu="True" >
@@ -29,22 +31,26 @@
                 <MenuItem Header="View">
                     <MenuItem Header="Refresh" Click="Refresh_Button"></MenuItem>
                 </MenuItem>
+                <MenuItem Header="Try throw exception">
+                    <MenuItem Header="Regular Exception" Click="RegularException_Click"></MenuItem>
+                    <MenuItem Header="Critical Exception" Click="CriticalException_Click" ></MenuItem>
+                </MenuItem>
             </Menu>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.Margin>
-                <Thickness Left="10" Right="10"></Thickness>
+                <Thickness Left="5" Right="5"></Thickness>
             </Grid.Margin>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="390" />
-                <ColumnDefinition Width="390" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0">
                 <GroupBox Header="Hardware Information">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="110"/>
-                            <ColumnDefinition Width="270"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*" MinWidth="200"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -53,13 +59,13 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0">BIOS Manufacturer</Label>
-                        <TextBox IsReadOnly="True" x:Name="BIOS_Manufacturer" Grid.Row="0" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Manufacturer" Grid.Row="0" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="1" Grid.Column="0">BIOS Name</Label>
-                        <TextBox IsReadOnly="True" x:Name="BIOS_Name" Grid.Row="1" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Name" Grid.Row="1" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="2" Grid.Column="0">BIOS S/N</Label>
-                        <TextBox IsReadOnly="True" x:Name="BIOS_SN" Grid.Row="2" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_SN" Grid.Row="2" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="3" Grid.Column="0">BIOS Version</Label>
-                        <TextBox IsReadOnly="True" x:Name="BIOS_Version" Grid.Row="3" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="BIOS_Version" Grid.Row="3" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                     </Grid>
                 </GroupBox>
             </StackPanel>
@@ -67,8 +73,8 @@
                 <GroupBox Header="Operating System Information">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="130"/>
-                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*" MinWidth="200"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -77,26 +83,26 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0">Computer Name</Label>
-                        <TextBox IsReadOnly="True" x:Name="Computer_Name" Grid.Row="0" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Name" Grid.Row="0" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="1" Grid.Column="0">Domain/Workgroup</Label>
-                        <TextBox IsReadOnly="True" x:Name="Computer_Domain" Grid.Row="1" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Domain" Grid.Row="1" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="2" Grid.Column="0">Physical Memory</Label>
-                        <TextBox IsReadOnly="True" x:Name="Computer_Memory" Grid.Row="2" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="Computer_Memory" Grid.Row="2" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                         <Label Grid.Row="3" Grid.Column="0">System Type</Label>
-                        <TextBox IsReadOnly="True" x:Name="Computer_SysType" Grid.Row="3" Grid.Column="1" Background="#FFECECEC"></TextBox>
+                        <TextBox IsReadOnly="True" x:Name="Computer_SysType" Grid.Row="3" Grid.Column="1" Background="#FFECECEC" VerticalAlignment="Center"></TextBox>
                     </Grid>
                 </GroupBox>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.Margin>
-                <Thickness Left="10" Right="10"></Thickness>
+                <Thickness Top="5" Left="5" Right="5" Bottom="5"></Thickness>
             </Grid.Margin>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="90"/>
-                <ColumnDefinition Width="690"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="9*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Name="Bottom_Label" Grid.Column="0" VerticalAlignment="Center">Welcome</TextBlock>
+            <TextBlock Name="Bottom_Label" Grid.Column="0" VerticalAlignment="Center" Margin="10,0,10,0">Welcome</TextBlock>
             <ProgressBar Name="Bottom_ProgressBar" Grid.Column="1" Height="20" VerticalAlignment="Center"></ProgressBar>
         </Grid>
     </Grid>
