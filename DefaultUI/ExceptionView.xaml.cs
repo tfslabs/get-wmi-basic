@@ -31,8 +31,7 @@ namespace GetWMIBasic.DefaultUI
         {
             typeof(UnauthorizedAccessException),
             typeof(COMException),
-            typeof(ManagementException),
-            typeof(CommonException)
+            typeof(ManagementException)
         };
 
         // Constructor of the Exception View class

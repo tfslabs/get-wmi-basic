@@ -70,11 +70,8 @@ namespace GetWMIBasic
          */
         private async void ConnectToAnotherComputer_Button(object sender, RoutedEventArgs e)
         {
-            // Initialize the ConnectForm instance
-            ConnectForm connectForm = new ConnectForm();
-
             // Get the user credentials from the ConnectForm
-            (string computerName, string username, SecureString password) userCredential = connectForm.ReturnValue();
+            (string computerName, string username, SecureString password) userCredential = (new ConnectForm()).ReturnValue();
 
             // If the computer name is not empty, create a new MachineMethods instance
             if (userCredential.computerName != "")
@@ -91,7 +88,6 @@ namespace GetWMIBasic
          */
         private void Exit_Button(object sender, RoutedEventArgs e)
         {
-            // Shut down the application
             Application.Current.Shutdown();
         }
 
@@ -200,7 +196,7 @@ namespace GetWMIBasic
         {
             try
             {
-                throw new CommonException("This is a common exception example.");
+                throw new ManagementException("Unable to manage (example exception handler).");
             }
             catch (Exception ex)
             {
@@ -216,7 +212,7 @@ namespace GetWMIBasic
         {
             try
             {
-                throw new CriticalException("This is a critical exception example.");
+                throw new Exception("Critical exception (example exception handler).");
             }
             catch (Exception ex)
             {

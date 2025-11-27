@@ -6,17 +6,19 @@
         xmlns:local="clr-namespace:GetWMIBasic"
         mc:Ignorable="d"
         Title="Connect To Another Computer"
-        Height="160"
-        Width="400" 
+        Height="180"
+        Width="400"
+        MinHeight="180"
+        MinWidth="400"
+        MaxHeight="180"
+        MaxWidth="400"
         ResizeMode="NoResize"
         SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.Margin>
@@ -32,34 +34,21 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="5*"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" VerticalAlignment="Center">Computer Name</Label>
-            <TextBox x:Name="ComputerName_TextBox" Grid.Column="1" VerticalAlignment="Center"/>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Computer Name</Label>
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="ComputerName_TextBox" VerticalAlignment="Center"/>
+            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">User Name</Label>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="UserName_TextBox" VerticalAlignment="Center"/>
+            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Password</Label>
+            <PasswordBox Grid.Row="2" Grid.Column="1" x:Name="Password_TextBox" VerticalAlignment="Center"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.Margin>
-                <Thickness Left="5" Right="5"></Thickness>
-            </Grid.Margin>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" VerticalAlignment="Center">User Name</Label>
-            <TextBox x:Name="UserName_TextBox" Grid.Column="1" VerticalAlignment="Center"/>
-        </Grid>
-        <Grid Grid.Row="3">
-            <Grid.Margin>
-                <Thickness Left="5" Right="5"></Thickness>
-            </Grid.Margin>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="5*"/>
-            </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" VerticalAlignment="Center">Password</Label>
-            <PasswordBox x:Name="Password_TextBox" Grid.Column="1" VerticalAlignment="Center"/>
-        </Grid>
-        <Grid Grid.Row="4">
-            <Grid.Margin>
-                <Thickness Left="5" Right="5"></Thickness>
+                <Thickness Left="5" Right="5" Bottom="5"></Thickness>
             </Grid.Margin>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

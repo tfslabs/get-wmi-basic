@@ -162,22 +162,18 @@ namespace GetWMIBasic.WMIMethods
          */
         public async Task CallMethod(string className, string fields, string methodName, object[] args)
         {
-            // Create the WMI query
-            ObjectQuery query = new ObjectQuery($"SELECT {fields} FROM {className}");
-            // Execute the method asynchronously
-            await Task.Run(() =>
-            {
-                // Create the ManagementObjectSearcher object
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+            // Get the WMI objects asynchronously
+            using (Task<ManagementObjectCollection> manageObject = GetObjects(className, fields)) {
+                await Task.Run(() =>
                 {
                     // Invoke the method on each object returned by the query
-                    foreach (ManagementObject manageObject in searcher.Get().Cast<ManagementObject>())
+                    foreach (ManagementObject obj in manageObject.Result.Cast<ManagementObject>())
                     {
                         // Invoke the specified method with arguments
-                        _ = manageObject.InvokeMethod(methodName, args);
+                        _ = obj.InvokeMethod(methodName, args);
                     }
-                }
-            });
+                });
+            }
         }
     }
 }

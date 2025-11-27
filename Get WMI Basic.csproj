@@ -102,8 +102,6 @@
     <Compile Include="DefaultUI\ExceptionView.xaml.cs">
       <DependentUpon>ExceptionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WMIMethods\CommonException.cs" />
-    <Compile Include="WMIMethods\CriticalException.cs" />
     <Compile Include="WMIMethods\MachineMethods.cs" />
     <Page Include="DefaultUI\ConnectForm.xaml">
       <SubType>Designer</SubType>
